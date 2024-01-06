@@ -1,6 +1,7 @@
- #################### RETAIL INSIGHT GENERATOR ####################
- #################### ELIGIBILITY TABLE ####################
-dwh_ddls = ['''CREATE OR REPLACE
+#################### RETAIL INSIGHT GENERATOR ####################
+#################### ELIGIBILITY TABLE ####################
+dwh_ddls = [
+    '''CREATE OR REPLACE
       TABLE DW_DWH.DWH_D_ELGBL_STY_COL_LOC_MTX(
      LOC_ID VARCHAR
      ,LOC_KEY NUMBER
@@ -13,8 +14,8 @@ dwh_ddls = ['''CREATE OR REPLACE
  	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
      );''',
 
- #################### LAST 4 WEEKS SALES ####################
- '''CREATE OR REPLACE
+    #################### LAST 4 WEEKS SALES ####################
+    '''CREATE OR REPLACE
       TABLE DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B (
  	DAY_KEY DATE
  	,ITM_ID VARCHAR(16777216)
@@ -28,8 +29,8 @@ dwh_ddls = ['''CREATE OR REPLACE
  	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
  );''',
 
-#################### IMMINENT STOCKOUT ####################
- '''CREATE OR REPLACE
+    #################### IMMINENT STOCKOUT ####################
+    '''CREATE OR REPLACE
       TABLE DW_DWH.DWH_F_INV_IMMNT_STKOUT_ILD_B (
  	DAY_KEY DATE
      ,ITM_ID VARCHAR
@@ -48,8 +49,8 @@ dwh_ddls = ['''CREATE OR REPLACE
  	);
   ''',
 
-#################### STOCKOUT ####################
- '''CREATE OR REPLACE
+    #################### STOCKOUT ####################
+    '''CREATE OR REPLACE
  	 TABLE DW_DWH.DWH_F_INV_STKOUT_ILD_B (
  	DAY_KEY DATE
      ,ITM_ID VARCHAR
@@ -68,7 +69,7 @@ dwh_ddls = ['''CREATE OR REPLACE
  	);
   ''',
 
-#################### OVERSTOCKS ####################
+    #################### OVERSTOCKS ####################
     '''CREATE OR REPLACE
        TABLE DW_DWH.DWH_F_INV_OVERSTK_ILD_B (
       DAY_KEY DATE
@@ -95,8 +96,8 @@ dwh_ddls = ['''CREATE OR REPLACE
 
 ####################### DWH VIEW DDL ######################
 
-
-dwh_v_ddls = ['''CREATE OR REPLACE
+dwh_v_ddls = [
+    '''CREATE OR REPLACE
  VIEW DW_DWH_V.V_DWH_D_ELGBL_STY_COL_LOC_MTX(
 	LOC_ID,
 	LOC_KEY,
@@ -119,8 +120,7 @@ SELECT
 	RCD_INS_TS,
 	RCD_UPD_TS
 FROM DW_DWH.DWH_D_ELGBL_STY_COL_LOC_MTX;
-''',
-'''CREATE OR REPLACE
+''', '''CREATE OR REPLACE
  VIEW DW_DWH_V.V_DWH_F_AVG_SLS_L4W_ILD_B(
 	DAY_KEY,
 	ITM_ID,
@@ -145,8 +145,7 @@ SELECT
 	RCD_INS_TS,
 	RCD_UPD_TS
 FROM DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B;
-''',
-'''CREATE OR REPLACE  VIEW DW_DWH_V.V_DWH_F_INV_IMMNT_STKOUT_ILD_B(
+''', '''CREATE OR REPLACE  VIEW DW_DWH_V.V_DWH_F_INV_IMMNT_STKOUT_ILD_B(
 	DAY_KEY,
 	ITM_ID,
 	ITM_KEY,
@@ -178,8 +177,7 @@ SELECT
 	RCD_INS_TS,
 	RCD_UPD_TS
 FROM DW_DWH.DWH_F_INV_IMMNT_STKOUT_ILD_B;
-''',
-'''CREATE OR REPLACE  VIEW DW_DWH_V.V_DWH_F_INV_STKOUT_ILD_B(
+''', '''CREATE OR REPLACE  VIEW DW_DWH_V.V_DWH_F_INV_STKOUT_ILD_B(
 	DAY_KEY,
 	ITM_ID,
 	ITM_KEY,
@@ -210,8 +208,7 @@ SELECT DAY_KEY,
 	RCD_INS_TS,
 	RCD_UPD_TS
 FROM DW_DWH.DWH_F_INV_STKOUT_ILD_B;
-''',
-'''CREATE OR REPLACE
+''', '''CREATE OR REPLACE
  VIEW DW_DWH_V.V_DWH_F_INV_OVERSTK_ILD_B(
 	DAY_KEY,
 	LOC_ID,
@@ -256,7 +253,8 @@ FROM DW_DWH.DWH_F_INV_OVERSTK_ILD_B;
 ]
 #################### Datamart view of eligibility using last 4 weeks average sales table ##############
 
-dm_view_ddls = ['''
+dm_view_ddls = [
+    '''
 CREATE OR REPLACE  view DM_MERCH_V.DV_DWH_D_ELGBL_STY_COL_ITM_LOC_MTX(
 	ITM_ID,
 	ITM_KEY,
@@ -285,7 +283,8 @@ GROUP BY ALL;
 ]
 ############ TEMP DDL OF OVERSTOCK EOH ################
 
-tmp_ddls = ['''CREATE OR REPLACE 
+tmp_ddls = [
+    '''CREATE OR REPLACE 
  TABLE DW_TMP.TMP_F_INV_OVERSTK_EOH_MEAS_FACT_ILD_B (
 	MEAS_DT DATE,
 	CHN_KEY NUMBER,
@@ -343,8 +342,8 @@ tmp_ddls = ['''CREATE OR REPLACE
 	POS_TXN_ID VARCHAR,
 	PR_CDE VARCHAR
 );
-''']
-
+'''
+]
 
 fact_tim_rul_mtx_ins = [
     '''
@@ -391,7 +390,8 @@ WHERE NOT EXISTS (SELECT *
     '''
 ]
 
-c_batch_scripts_ins = ['''
+c_batch_scripts_ins = [
+    '''
 
 INSERT INTO DW_DWH.DWH_C_BATCH_SCRIPTS 
     SELECT * FROM (
@@ -484,7 +484,8 @@ INSERT INTO DW_DWH.DWH_C_BATCH_SCRIPTS
         SELECT * FROM DW_DWH.DWH_C_BATCH_SCRIPTS TGT 
         WHERE SRC.SCRIPT_NAME = TGT.SCRIPT_NAME
     );
-''']
+'''
+]
 
 hist_to_curr_ins_queries = [
     '''
@@ -513,8 +514,7 @@ DAY_KEY,
               RCD_INS_TS,
           RCD_UPD_TS
 FROM DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B_HIST
-	''',
-    '''
+	''', '''
 	---insert immnt stkout history to daily dwh table from hist table
 	INSERT INTO DW_DWH.DWH_F_INV_IMMNT_STKOUT_ILD_B
 	(
@@ -549,8 +549,7 @@ FROM DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B_HIST
 		,RCD_INS_TS
 		,RCD_UPD_TS
 	FROM DW_DWH.DWH_F_INV_IMMNT_STKOUT_ILD_B_HIST;
-	''',
-    '''
+	''', '''
 	---insert STKOUT history to daily dwh table from hist table
 	INSERT INTO DW_DWH.DWH_F_INV_STKOUT_ILD_B (
         DAY_KEY
@@ -584,9 +583,7 @@ FROM DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B_HIST
 				,RCD_INS_TS
 				,RCD_UPD_TS
 		FROM DW_DWH.DWH_F_INV_STKOUT_ILD_B_HIST;
-	'''
-    ,
-    '''
+	''', '''
 	---insert OVERSTK history to daily dwh table from hist table
 	INSERT INTO DW_DWH.DWH_F_INV_OVERSTK_ILD_B(
 		DAY_KEY
@@ -629,4 +626,133 @@ FROM DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B_HIST
 				,RCD_UPD_TS
 		FROM DW_DWH.DWH_F_INV_OVERSTK_ILD_B_HIST;
 	'''
+]
+
+#################### QUINTILES TMP DDL ####################
+qntiles_tmp_ddl = [
+    ################# PRODUCT QUINTILE ###################
+    '''
+CREATE
+OR REPLACE TABLE DW_TMP.TMP_F_STY_COLOR_QUINTILES_B (
+WK_KEY NUMBER(38, 0)
+,DPT_ID VARCHAR
+,DPT_KEY NUMBER(38, 0)
+,STY_ID VARCHAR
+,STY_KEY NUMBER(38, 0)
+,COLOR_ID VARCHAR
+,COLOR_KEY NUMBER(38, 0)
+,RANK_BY_SLS NUMBER(38, 0)
+,CNT_BY_DPT NUMBER(38, 0)
+);
+''',
+    ##################### TXN QUINTILE ###################
+    '''
+CREATE OR REPLACE TABLE DW_TMP.TMP_F_SLS_TXN_QUINTILES_B (
+  DAY_KEY DATE,
+  TXN_ID VARCHAR(16777216),
+  RANK_BY_SLS NUMBER(38,0),
+  CNT_TXN_BY_DAY NUMBER(38,0)
+);
+'''
+]
+#################### QUINTILES DWH DDL ####################
+qntiles_dwh_ddl = [
+    ##################### TXN QUINTILE ###################
+    '''
+  CREATE OR REPLACE TABLE DW_DWH.DWH_F_SLS_TXN_QUINTILES_B (
+    DAY_KEY DATE,
+    TXN_ID VARCHAR(16777216),
+    QTILE_SLS NUMBER(10,6),
+    CNT_BY_TXN NUMBER(38,0)
+  );
+''',
+    ################# PRODUCT QUINTILE ###################
+    '''
+CREATE
+OR REPLACE TABLE DW_DWH.DWH_F_STY_COLOR_QUINTILES_B (
+WK_KEY NUMBER(38, 0)
+,DPT_ID VARCHAR
+,DPT_KEY NUMBER(38, 0)
+,STY_ID VARCHAR
+,STY_KEY NUMBER(38, 0)
+,COLOR_ID VARCHAR
+,COLOR_KEY NUMBER(38, 0)
+,QTILE_SLS_L4W NUMBER(10, 6)
+,CNT_BY_STY_COLOR NUMBER(38, 0)
+);
+'''
+]
+
+#################### QUINTILES DWH VIEW DDL ####################
+qntiles_view_ddl = [
+    ##################### TXN QUINTILE ###################
+    '''
+CREATE OR REPLACE VIEW DW_DWH_V.V_DWH_F_SLS_TXN_QUINTILES_B
+(
+  DAY_KEY,
+  TXN_ID,
+  QTILE_SLS,
+  CNT_BY_TXN
+) AS 
+SELECT 
+DAY_KEY,
+TXN_ID,
+QTILE_SLS,
+CNT_BY_TXN
+FROM DW_DWH.DWH_F_SLS_TXN_QUINTILES_B;
+''',
+    ################# PRODUCT QUINTILE ###################
+    '''
+CREATE
+  OR REPLACE VIEW DW_DWH_V.V_DWH_F_STY_COLOR_QUINTILES_B AS
+
+SELECT *
+FROM DW_DWH.DWH_F_STY_COLOR_QUINTILES_B;
+'''
+]
+
+qntiles_dm_view_ddl = [
+    ################# PRODUCT QUINTILE ###################
+    '''
+  CREATE
+    OR REPLACE VIEW DM_MERCH_V.DV_DWH_F_STY_COLOR_QUINTILES_B AS
+
+  SELECT *
+    ,CASE
+      WHEN QTILE_SLS_L4W <= 0.2
+        AND QTILE_SLS_L4W <> 0
+        THEN 'Quintile 1'
+      WHEN QTILE_SLS_L4W <= 0.4
+        AND QTILE_SLS_L4W > 0.2
+        THEN 'Quintile 2'
+      WHEN QTILE_SLS_L4W <= 0.6
+        AND QTILE_SLS_L4W > 0.4
+        THEN 'Quintile 3'
+      WHEN QTILE_SLS_L4W <= 0.8
+        AND QTILE_SLS_L4W > 0.6
+        THEN 'Quintile 4'
+      WHEN QTILE_SLS_L4W <= 1
+        AND QTILE_SLS_L4W > 0.8
+        THEN 'Quintile 5'
+      WHEN QTILE_SLS_L4W = 0
+        THEN 'Other'
+      END AS QUINTILE
+  FROM DW_DWH.DWH_F_STY_COLOR_QUINTILES_B;
+  ''',
+    ##################### TXN QUINTILE ###################
+    '''
+  CREATE OR REPLACE VIEW DM_MERCH_V.DV_DWH_F_SLS_TXN_QUINTILES_B
+  (
+    DAY_KEY,
+    TXN_ID,
+    QTILE_SLS,
+    CNT_BY_TXN
+  ) AS 
+  SELECT 
+  DAY_KEY,
+  TXN_ID,
+  QTILE_SLS,
+  CNT_BY_TXN
+  FROM DW_DWH.DWH_F_SLS_TXN_QUINTILES_B;
+  '''
 ]
