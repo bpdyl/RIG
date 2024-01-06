@@ -1,0 +1,152 @@
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for truncate query TRUNCATE TABLE DW_DWH.DWH_D_ELGBL_STY_COL_LOC_MTX; for fresh load 
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7bff-0000-21a103a6173a
+Number of rows: 1
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for Eligiblity mtx table load: 
+ 
+                INSERT INTO DW_DWH.DWH_D_ELGBL_STY_COL_LOC_MTX
+                SELECT LOC.LOC_ID       AS LOC_ID
+                    ,LOC.LOC_KEY        AS LOC_KEY
+                    ,ITM.STY_ID         AS STY_ID
+                    ,ITM.STY_KEY        AS STY_KEY
+                    ,ITM.COLOR_ID       AS COLOR_ID
+                    ,ITM.COLOR_KEY      AS COLOR_KEY
+                    ,'Y'                AS INV_SLS_LY_FLG
+                    ,CURRENT_TIMESTAMP  AS RCD_INS_TS
+                    ,CURRENT_TIMESTAMP  AS RCD_UPD_TS
+                FROM DW_DWH.DWH_F_SLS_TXN_LN_ITM_B SLS
+                INNER JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM ON ITM.ITM_KEY = SLS.ITM_KEY
+                INNER JOIN DW_DWH.DWH_D_ORG_LOC_LU LOC ON LOC.LOC_KEY = SLS.LOC_KEY
+                INNER JOIN DW_DWH.DWH_D_TIM_DAY_LU TIM ON TIM.DAY_KEY = SLS.TXN_DT_KEY
+                INNER JOIN DW_DWH.DWH_D_CURR_TIM_LU CURR ON TIM.DAY_KEY >= to_date(to_char(dateadd(week, - 52, curr_day),'YYYY-MM-01'))
+                GROUP BY 1,2,3,4,5,6
+                HAVING SUM(F_SLS_QTY) > 0
+                UNION
+                SELECT LOC.LOC_ID       AS LOC_ID
+                    ,LOC.LOC_KEY        AS LOC_KEY
+                    ,ITM.STY_ID         AS STY_ID
+                    ,ITM.STY_KEY        AS STY_KEY
+                    ,ITM.COLOR_ID       AS COLOR_ID
+                    ,ITM.COLOR_KEY      AS COLOR_KEY
+                    ,'Y'                AS INV_SLS_LY_FLG
+                    ,CURRENT_TIMESTAMP  AS RCD_INS_TS
+                    ,CURRENT_TIMESTAMP  AS RCD_UPD_TS
+                FROM DW_DWH.DWH_F_INV_ILD_B INV
+                INNER JOIN DW_DWH.DWH_D_TIM_DAY_LU TIM ON TIM.DAY_KEY = INV.DAY_KEY
+                INNER JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM ON INV.ITM_KEY = ITM.ITM_KEY
+                INNER JOIN DW_DWH.DWH_D_ORG_LOC_LU LOC ON INV.LOC_KEY = LOC.LOC_KEY
+                INNER JOIN DW_DWH.DWH_D_CURR_TIM_LU CURR ON TIM.DAY_KEY >= to_date(to_char(dateadd(week, - 52, curr_day),'YYYY-MM-01'))
+                GROUP BY 1,2,3,4,5,6
+                HAVING SUM(F_OH_QTY) > 0;
+                     
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7bf8-0000-21a103a636ea
+Number of rows: 9103116
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+Eligibility table load successful. [(9103116,)]
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for ddl of avg sls history table 
+  CREATE OR REPLACE TABLE DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B_HIST CLONE DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B; 
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175d7-0b05-7bff-0000-21a103a6178e
+Number of rows: 1
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for truncate query TRUNCATE TABLE DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B_HIST; for fresh load 
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175d7-0b05-7bff-0000-21a103a61792
+Number of rows: 1
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for Average sales L4W dwh history load: 
+ 
+    INSERT INTO DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B_HIST 
+( DAY_KEY,
+              ITM_ID,
+              ITM_KEY,
+              LOC_ID,
+              LOC_KEY,
+              AVG_L4W_SLS_QTY,
+              AVG_L4W_SLS_RTL_LCL,
+              AVG_L4W_SLS_CST_LCL,
+              RCD_INS_TS,
+              RCD_UPD_TS
+              )
+WITH WEEKLY_SLS_AGG AS 
+(
+  SELECT
+  DISTINCT
+    DATEADD(DAY, -28, DAY.DAY_KEY) AS END_DAY_KEY,
+    DAY.DAY_KEY AS W_DAY_KEY
+  FROM DW_DWH.DWH_F_SLS_TXN_LN_ITM_B SLS
+  INNER JOIN DW_DWH.DWH_D_TIM_DAY_LU DAY
+  ON SLS.TXN_DT_KEY = DAY.DAY_KEY
+  WHERE DAY.DAY_KEY >= '2020-02-02' and DAY.DAY_KEY <='2020-08-26'
+)
+
+SELECT
+  W.W_DAY_KEY AS DAY_KEY,
+  ITM.ITM_ID AS ITM_ID,
+  SLS.ITM_KEY AS ITM_KEY, 
+  LOC.LOC_ID AS LOC_ID,
+  SLS.LOC_KEY AS LOC_KEY,  
+  SUM(F_SLS_QTY) / 28 AS AVG_L4W_SLS_QTY,
+  SUM(F_SLS_RTL_LCL) / 28 AS AVG_L4W_SLS_RTL_LCL, 
+  SUM(F_SLS_CST_LCL) / 28 AS AVG_L4W_SLS_CST_LCL,
+  CURRENT_TIMESTAMP AS RCD_INS_TS,
+  CURRENT_TIMESTAMP AS RCD_UPD_TS
+FROM DW_DWH.DWH_F_SLS_TXN_LN_ITM_B SLS
+INNER JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM 
+  ON SLS.ITM_KEY = ITM.ITM_KEY
+INNER JOIN DW_DWH.DWH_D_ORG_LOC_LU LOC
+  ON SLS.LOC_KEY = LOC.LOC_KEY   
+INNER JOIN DW_DWH.DWH_D_TIM_DAY_LU DAY
+  ON SLS.TXN_DT_KEY = DAY.DAY_KEY
+INNER JOIN WEEKLY_SLS_AGG W
+  ON DAY.DAY_KEY >= W.END_DAY_KEY AND 
+     DAY.DAY_KEY < W.W_DAY_KEY
+INNER JOIN DW_DWH.DWH_D_ELGBL_STY_COL_LOC_MTX ELGBL
+  ON SLS.ITM_KEY = ITM.ITM_KEY AND SLS.LOC_KEY = ELGBL.LOC_KEY AND ITM.COLOR_KEY = ELGBL.COLOR_KEY AND ITM.STY_KEY = ELGBL.STY_KEY
+GROUP BY 
+  W.W_DAY_KEY,
+  ITM.ITM_ID,
+  SLS.ITM_KEY,
+  LOC.LOC_ID, 
+  SLS.LOC_KEY;
+         
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175d7-0b05-7c12-0000-21a103a6284a
+Number of rows: 299510177
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+Avg Sls History dwh load Successful. [(299510177,)]
+----------------------------------------------------------------------------------------------------------------------------------
+                

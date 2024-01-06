@@ -1,0 +1,155 @@
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for ddl of stkout history table 
+  CREATE OR REPLACE TABLE DW_DWH.DWH_F_INV_STKOUT_ILD_B_HIST CLONE DW_DWH.DWH_F_INV_STKOUT_ILD_B;  
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175db-0b05-7c12-0000-21a103a62852
+Number of rows: 1
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for truncate query TRUNCATE TABLE DW_DWH.DWH_F_INV_STKOUT_ILD_B_HIST; for fresh load 
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175db-0b05-7bf8-0000-21a103a63716
+Number of rows: 1
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for stockout dwh history load: 
+ 
+        INSERT INTO DW_DWH.DWH_F_INV_STKOUT_ILD_B_HIST (
+        DAY_KEY
+        ,ITM_ID
+        ,ITM_KEY
+        ,LOC_ID
+        ,LOC_KEY
+        ,LCL_CNCY_CDE
+        ,COUNT_STOCKOUT
+        ,COUNT_DAYS
+        ,COUNT_WEEKEND_DAYS
+        ,AVG_L4W_SLS_QTY
+        ,AVG_L4W_SLS_RTL
+        ,AVG_L4W_SLS_CST
+        ,RCD_INS_TS
+        ,RCD_UPD_TS
+)
+SELECT  SLS.DAY_KEY                                                                                       AS DAY_KEY
+       ,ITM.ITM_ID                                                                                        AS ITM_ID
+       ,SLS.ITM_KEY                                                                                       AS ITM_KEY
+       ,LOC.LOC_ID                                                                                        AS LOC_ID
+       ,SLS.LOC_KEY                                                                                       AS LOC_KEY
+       ,INV.LCL_CNCY_CDE                                                                                  AS LCL_CNCY_CDE
+       ,1                                                                                                 AS COUNT_STOCKOUT
+       ,1                                                                                                 AS COUNT_DAYS
+      ,CASE
+
+          WHEN MAX(DAY.WK_DAY_DESC) = 'Sunday' OR  MAX(DAY.WK_DAY_DESC) = 'Saturday'
+                  THEN 1
+          ELSE 0
+        END                                                                                               AS COUNT_WEEKEND_DAYS
+       ,SUM(AVG_L4W_SLS_QTY)                                                                              AS AVG_L4W_SLS_QTY
+       ,SUM(SLS.AVG_L4W_SLS_RTL_LCL)                                                                      AS AVG_L4W_SLS_RTL
+       ,SUM(SLS.AVG_L4W_SLS_CST_LCL)                                                                      AS AVG_L4W_SLS_CST
+       ,CURRENT_TIMESTAMP                                                                                 AS RCD_INS_TS
+       ,CURRENT_TIMESTAMP                                                                                 AS RCD_UPD_TS
+FROM DW_DWH.DWH_F_INV_ILD_B INV
+INNER JOIN DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B_HIST SLS
+ON SLS.ITM_KEY = INV.ITM_KEY AND SLS.LOC_KEY = INV.LOC_KEY AND SLS.DAY_KEY BETWEEN INV.DAY_KEY AND INV.END_DAY_KEY
+INNER JOIN DW_DWH.DWH_D_ORG_LOC_LU LOC ON INV.LOC_KEY = LOC.LOC_KEY 
+INNER JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM ON INV.ITM_KEY = ITM.ITM_KEY
+INNER JOIN DW_DWH.DWH_D_TIM_DAY_LU DAY
+ON DAY.DAY_KEY = SLS.DAY_KEY
+GROUP BY  1
+         ,2
+         ,3
+         ,4
+         ,5
+         ,6
+         ,7
+         ,8
+HAVING SUM(F_OH_QTY) <= 0 AND SUM(AVG_L4W_SLS_QTY) > 0;
+           
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175db-0b05-7bf8-0000-21a103a6371a
+Number of rows: 122900101
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+Stockout History dwh load Successful. []
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for datamart delete query 
+ DELETE FROM DM_MERCH.DM_F_MEAS_FACT_ILD_B WHERE FACT_CDE = 1500;-- stockout  
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b17609-0b05-7bff-0000-21a103a617c6
+Number of rows: 738032
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for datamart insert query 
+ 
+                INSERT INTO DM_MERCH.DM_F_MEAS_FACT_ILD_B 
+                (
+                MEAS_DT
+                ,ITM_KEY
+                ,LOC_KEY
+                ,DIV_KEY
+                ,CHN_KEY
+                ,CHNL_ID
+                ,FACT_CDE
+                ,LCL_CNCY_CDE
+                ,F_FACT_COL1
+                ,F_FACT_COL2
+                ,F_FACT_COL3
+                ,F_FACT_COL4
+                ,F_FACT_COL5
+                ,F_FACT_COL6
+                )
+SELECT           SRC.DAY_KEY                    AS MEAS_DT
+                ,SRC.ITM_KEY                    AS ITM_KEY
+                ,SRC.LOC_KEY                    AS LOC_KEY
+                ,ITM.DIV_KEY                    AS DIV_KEY
+                ,LOC.CHN_KEY                    AS CHN_KEY
+                ,LOC.CHNL_ID                    AS CHNL_ID
+                ,1500                           AS FACT_CDE
+                ,SRC.LCL_CNCY_CDE               AS LCL_CNCY_CDE
+                ,SRC.COUNT_STOCKOUT             AS F_FACT_COL1
+                ,SRC.COUNT_DAYS                 AS F_FACT_COL2
+                ,SRC.COUNT_WEEKEND_DAYS         AS F_FACT_COL3
+                ,SRC.AVG_L4W_SLS_QTY            AS F_FACT_COL4
+                ,SRC.AVG_L4W_SLS_RTL            AS F_FACT_COL5	
+                ,SRC.AVG_L4W_SLS_CST            AS F_FACT_COL6
+            FROM DW_DWH.DWH_F_INV_STKOUT_ILD_B_HIST SRC
+            INNER JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM ON ITM.ITM_KEY = SRC.ITM_KEY
+            INNER JOIN DW_DWH.DWH_D_ORG_LOC_LU LOC ON LOC.LOC_KEY = SRC.LOC_KEY
+            --WHERE SRC.DAY_KEY <> '2023-12-13'
+            ;
+         
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b17609-0b05-7bff-0000-21a103a617ce
+Number of rows: 114295496
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+Stockout History datamart load Successful. 
+                             Del query Result: []                              Dm Insert Query Result : [(114295496,)]
+                             
+----------------------------------------------------------------------------------------------------------------------------------
+                

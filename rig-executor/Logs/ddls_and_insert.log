@@ -14,8 +14,8 @@ Attempt for DDL queries
      ,RCD_INS_TS TIMESTAMP_LTZ(9) NOT NULL
  	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
      ); 
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7c12-0000-21a103a625ce
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7c12-0000-21a103a627f2
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -37,8 +37,8 @@ Attempt for DDL queries
      ,RCD_INS_TS TIMESTAMP_LTZ(9) NOT NULL
  	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
  ); 
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7bff-0000-21a103a615ae
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7c12-0000-21a103a627f6
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -65,8 +65,8 @@ Attempt for DDL queries
  	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
  	);
    
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7c12-0000-21a103a625d6
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7bff-0000-21a103a6172e
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -93,8 +93,8 @@ Attempt for DDL queries
  	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
  	);
    
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7bf8-0000-21a103a6355a
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7bf8-0000-21a103a636da
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -125,8 +125,8 @@ Attempt for DDL queries
  	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
   );
    
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7c12-0000-21a103a625da
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7bf8-0000-21a103a636de
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -159,8 +159,8 @@ SELECT
 	RCD_UPD_TS
 FROM DW_DWH.DWH_D_ELGBL_STY_COL_LOC_MTX;
  
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7bff-0000-21a103a615b2
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7c12-0000-21a103a627fa
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -195,8 +195,8 @@ SELECT
 	RCD_UPD_TS
 FROM DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B;
  
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7bff-0000-21a103a615b6
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7bff-0000-21a103a61732
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -238,8 +238,8 @@ SELECT
 	RCD_UPD_TS
 FROM DW_DWH.DWH_F_INV_IMMNT_STKOUT_ILD_B;
  
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7bff-0000-21a103a615ba
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7c12-0000-21a103a627fe
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -280,8 +280,8 @@ SELECT DAY_KEY,
 	RCD_UPD_TS
 FROM DW_DWH.DWH_F_INV_STKOUT_ILD_B;
  
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7bf8-0000-21a103a6355e
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7bf8-0000-21a103a636e2
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -332,8 +332,8 @@ SELECT
 	RCD_UPD_TS
 FROM DW_DWH.DWH_F_INV_OVERSTK_ILD_B;
  
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7bf8-0000-21a103a63562
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7bff-0000-21a103a61736
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -368,8 +368,8 @@ ON SLS.ITM_KEY = ITM.ITM_KEY
 INNER JOIN DW_DWH.DWH_D_CURR_TIM_LU CURR ON SLS.DAY_KEY >= to_date(to_char(dateadd(week, -52, curr_day),'YYYY-MM-01'))
 GROUP BY ALL;
  
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7c12-0000-21a103a625de
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7bf8-0000-21a103a636e6
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -437,500 +437,8 @@ Attempt for DDL queries
 	PR_CDE VARCHAR
 );
  
-on 2024-01-05 10:57:20.053854+05:45: Started
-Snowflake Query ID : 01b17598-0b05-7bf8-0000-21a103a63566
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-Attempt for fact time rule mtx and c-batch scripts insert queries 
-INSERT INTO DM_MERCH.DM_D_MEAS_FACT_TIM_RULE_MTX (
-	FACT_CDE
-	,MEAS_TIM_RULE_CDE
-	,MEAS_CDE
-	,MEAS_COEFF
-	)
-SELECT * FROM (
-SELECT 
-	1700 AS FACT_CDE
-	,10 AS MEAS_TIM_RULE_CDE
-	,'INV_IMMNT_STKOUT' AS MEAS_CDE
-	,1 AS MEAS_COEFF
-    UNION ALL 
-SELECT 1650
-	,20
-	,'INV_OVERSTK_EOH'
-	,1
-UNION ALL 
-SELECT 
-	1600
-	,10
-	,'INV_OVERSTK'
-	,1
-UNION ALL 
-SELECT 
-	1500
-	,10
-	,'INV_STKOUT'
-	,1
-UNION ALL
-SELECT 
-	110
-	,140
-	,'SLS_AVGL4W'
-	,1
-    ) SRC
-WHERE NOT EXISTS (SELECT *
-                  FROM  DM_MERCH.DM_D_MEAS_FACT_TIM_RULE_MTX  AS tgt
-                  WHERE tgt.FACT_CDE = SRC.FACT_CDE);
-
-     on 2024-01-05 10:57:30.685339+05:45: Error - 000606 (57P03): No active warehouse selected in the current session.  Select an active warehouse with the 'use warehouse' command.
-
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE
-      TABLE DW_DWH.DWH_D_ELGBL_STY_COL_LOC_MTX(
-     LOC_ID VARCHAR
-     ,LOC_KEY NUMBER
-     ,STY_ID VARCHAR
-     ,STY_KEY NUMBER
-     ,COLOR_ID VARCHAR
-     ,COLOR_KEY NUMBER
-     ,INV_SLS_LY_FLG VARCHAR
-     ,RCD_INS_TS TIMESTAMP_LTZ(9) NOT NULL
- 	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
-     ); 
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7bff-0000-21a103a615c2
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE
-      TABLE DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B (
- 	DAY_KEY DATE
- 	,ITM_ID VARCHAR(16777216)
- 	,ITM_KEY NUMBER(38,0)
- 	,LOC_ID VARCHAR(16777216)
- 	,LOC_KEY NUMBER(38,0)
- 	,AVG_L4W_SLS_QTY NUMBER(18,4)
-     ,AVG_L4W_SLS_RTL_LCL NUMBER(18,4)
- 	,AVG_L4W_SLS_CST_LCL NUMBER(18,4)
-     ,RCD_INS_TS TIMESTAMP_LTZ(9) NOT NULL
- 	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
- ); 
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7c12-0000-21a103a625e6
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE
-      TABLE DW_DWH.DWH_F_INV_IMMNT_STKOUT_ILD_B (
- 	DAY_KEY DATE
-     ,ITM_ID VARCHAR
- 	,ITM_KEY NUMBER(38, 0)
-     ,LOC_ID VARCHAR
- 	,LOC_KEY NUMBER(38, 0)
- 	,COUNT_IMMIN_STOCKOUT NUMBER(20, 0)
- 	,AVG_L4W_SLS_QTY NUMBER(18, 4)
- 	,AVG_L4W_SLS_RTL NUMBER(18, 4)
- 	,AVG_L4W_SLS_CST NUMBER(18, 4)
- 	,IMMIN_STOCKOUT_THRESHOLD NUMBER(38, 0)
- 	,NUM_DAYS_OF_SUPPLY NUMBER(18, 4)
- 	,LCL_CNCY_CDE VARCHAR
- 	,RCD_INS_TS TIMESTAMP_LTZ(9) NOT NULL
- 	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
- 	);
-   
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7bff-0000-21a103a615c6
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE
- 	 TABLE DW_DWH.DWH_F_INV_STKOUT_ILD_B (
- 	DAY_KEY DATE
-     ,ITM_ID VARCHAR
- 	,ITM_KEY NUMBER(38, 0)
-     ,LOC_ID VARCHAR
- 	,LOC_KEY NUMBER(38, 0)
- 	,COUNT_STOCKOUT NUMBER(38, 0)
- 	,COUNT_DAYS NUMBER(38, 0)
- 	,COUNT_WEEKEND_DAYS NUMBER(38, 0)
- 	,AVG_L4W_SLS_QTY NUMBER(18, 4)
- 	,AVG_L4W_SLS_CST NUMBER(18, 4)
- 	,AVG_L4W_SLS_RTL NUMBER(18, 4)
- 	,LCL_CNCY_CDE VARCHAR(5)
- 	,RCD_INS_TS TIMESTAMP_LTZ(9) NOT NULL
- 	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
- 	);
-   
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7bff-0000-21a103a615ca
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE
-       TABLE DW_DWH.DWH_F_INV_OVERSTK_ILD_B (
-      DAY_KEY DATE
-      ,LOC_ID VARCHAR
-      ,LOC_KEY NUMBER(38, 0)
-      ,ITM_ID VARCHAR
-      ,ITM_KEY NUMBER(38, 0)
-      ,COUNT_OVERSTOCK NUMBER(38, 0)
-      ,OVERSTOCK_DAY_THRESHOLD NUMBER(38, 1)
-      ,AVG_L4W_SLS_QTY NUMBER(18, 4)
-      ,AVG_L4W_SLS_CST NUMBER(18, 4)
-      ,AVG_L4W_SLS_RTL NUMBER(18, 4)
-      ,NUM_DAYS_OF_SUPPLY NUMBER(18, 4)
-      ,DAYS_SINCE_SALE NUMBER(38, 0)
-      ,OVERSTOCK_INV_RTL NUMBER(18, 4)
-      ,OVERSTOCK_INV_QTY NUMBER(38, 0)
-      ,OVERSTOCK_INV_CST NUMBER(18, 4)
-      ,LCL_CNCY_CDE VARCHAR
-      ,RCD_INS_TS TIMESTAMP_LTZ(9) NOT NULL
- 	,RCD_UPD_TS TIMESTAMP_LTZ(9) NOT NULL
-  );
-   
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7c12-0000-21a103a625ea
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE
- VIEW DW_DWH_V.V_DWH_D_ELGBL_STY_COL_LOC_MTX(
-	LOC_ID,
-	LOC_KEY,
-	STY_ID,
-	STY_KEY,
-	COLOR_ID,
-	COLOR_KEY,
-	INV_SLS_LY_FLG,
-	RCD_INS_TS,
-	RCD_UPD_TS
-) AS
-SELECT
-	LOC_ID,
-	LOC_KEY,
-	STY_ID,
-	STY_KEY,
-	COLOR_ID,
-	COLOR_KEY,
-	INV_SLS_LY_FLG,
-	RCD_INS_TS,
-	RCD_UPD_TS
-FROM DW_DWH.DWH_D_ELGBL_STY_COL_LOC_MTX;
- 
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7c12-0000-21a103a625ee
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE
- VIEW DW_DWH_V.V_DWH_F_AVG_SLS_L4W_ILD_B(
-	DAY_KEY,
-	ITM_ID,
-	ITM_KEY,
-	LOC_ID,
-	LOC_KEY,
-	AVG_L4W_SLS_QTY,
-	AVG_L4W_SLS_RTL_LCL,
-	AVG_L4W_SLS_CST_LCL,
-	RCD_INS_TS,
-	RCD_UPD_TS
-) AS
-SELECT
-	DAY_KEY,
-	ITM_ID,
-	ITM_KEY,
-	LOC_ID,
-	LOC_KEY,
-	AVG_L4W_SLS_QTY,
-	AVG_L4W_SLS_RTL_LCL,
-	AVG_L4W_SLS_CST_LCL,
-	RCD_INS_TS,
-	RCD_UPD_TS
-FROM DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B;
- 
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7bf8-0000-21a103a63572
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE  VIEW DW_DWH_V.V_DWH_F_INV_IMMNT_STKOUT_ILD_B(
-	DAY_KEY,
-	ITM_ID,
-	ITM_KEY,
-	LOC_ID,
-	LOC_KEY,
-	COUNT_IMMIN_STOCKOUT,
-	AVG_L4W_SLS_QTY,
-	AVG_L4W_SLS_RTL,
-	AVG_L4W_SLS_CST,
-	IMMIN_STOCKOUT_THRESHOLD,
-	NUM_DAYS_OF_SUPPLY,
-	LCL_CNCY_CDE,
-	RCD_INS_TS,
-	RCD_UPD_TS
-) AS
-SELECT
- 	DAY_KEY,
-	ITM_ID,
-	ITM_KEY,
-	LOC_ID,
-	LOC_KEY,
-	COUNT_IMMIN_STOCKOUT,
-	AVG_L4W_SLS_QTY,
-	AVG_L4W_SLS_RTL,
-	AVG_L4W_SLS_CST,
-	IMMIN_STOCKOUT_THRESHOLD,
-	NUM_DAYS_OF_SUPPLY,
-	LCL_CNCY_CDE,
-	RCD_INS_TS,
-	RCD_UPD_TS
-FROM DW_DWH.DWH_F_INV_IMMNT_STKOUT_ILD_B;
- 
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7bf8-0000-21a103a63576
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE  VIEW DW_DWH_V.V_DWH_F_INV_STKOUT_ILD_B(
-	DAY_KEY,
-	ITM_ID,
-	ITM_KEY,
-	LOC_ID,
-	LOC_KEY,
-	COUNT_STOCKOUT,
-	COUNT_DAYS,
-	COUNT_WEEKEND_DAYS,
-	AVG_L4W_SLS_QTY,
-	AVG_L4W_SLS_CST,
-	AVG_L4W_SLS_RTL,
-	LCL_CNCY_CDE,
-	RCD_INS_TS,
-	RCD_UPD_TS
-) AS
-SELECT DAY_KEY,
-	ITM_ID,
-	ITM_KEY,
-	LOC_ID,
-	LOC_KEY,
-	COUNT_STOCKOUT,
-	COUNT_DAYS,
-	COUNT_WEEKEND_DAYS,
-	AVG_L4W_SLS_QTY,
-	AVG_L4W_SLS_CST,
-	AVG_L4W_SLS_RTL,
-	LCL_CNCY_CDE,
-	RCD_INS_TS,
-	RCD_UPD_TS
-FROM DW_DWH.DWH_F_INV_STKOUT_ILD_B;
- 
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7bff-0000-21a103a615ce
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE
- VIEW DW_DWH_V.V_DWH_F_INV_OVERSTK_ILD_B(
-	DAY_KEY,
-	LOC_ID,
-	LOC_KEY,
-	ITM_ID,
-	ITM_KEY,
-	COUNT_OVERSTOCK,
-	OVERSTOCK_DAY_THRESHOLD,
-	AVG_L4W_SLS_QTY,
-	AVG_L4W_SLS_CST,
-	AVG_L4W_SLS_RTL,
-	NUM_DAYS_OF_SUPPLY,
-	DAYS_SINCE_SALE,
-	OVERSTOCK_INV_RTL,
-	OVERSTOCK_INV_QTY,
-	OVERSTOCK_INV_CST,
-	LCL_CNCY_CDE,
-	RCD_INS_TS,
-	RCD_UPD_TS
-) AS
-SELECT
- DAY_KEY,
-	LOC_ID,
-	LOC_KEY,
-	ITM_ID,
-	ITM_KEY,
-	COUNT_OVERSTOCK,
-	OVERSTOCK_DAY_THRESHOLD,
-	AVG_L4W_SLS_QTY,
-	AVG_L4W_SLS_CST,
-	AVG_L4W_SLS_RTL,
-	NUM_DAYS_OF_SUPPLY,
-	DAYS_SINCE_SALE,
-	OVERSTOCK_INV_RTL,
-	OVERSTOCK_INV_QTY,
-	OVERSTOCK_INV_CST,
-	LCL_CNCY_CDE,
-	RCD_INS_TS,
-	RCD_UPD_TS
-FROM DW_DWH.DWH_F_INV_OVERSTK_ILD_B;
- 
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7bff-0000-21a103a615d2
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- 
-CREATE OR REPLACE  view DM_MERCH_V.DV_DWH_D_ELGBL_STY_COL_ITM_LOC_MTX(
-	ITM_ID,
-	ITM_KEY,
-	LOC_ID,
-	LOC_KEY,
-	STY_KEY,
-	STY_ID,
-	COLOR_KEY,
-	COLOR_ID
-) AS
-SELECT 
-SLS.ITM_ID
-,SLS.ITM_KEY
-,LOC_ID
-,LOC_KEY
-,ITM.STY_KEY
-,ITM.STY_ID
-,ITM.COLOR_KEY
-,ITM.COLOR_ID
-FROM DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B SLS 
-JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM 
-ON SLS.ITM_KEY = ITM.ITM_KEY
-INNER JOIN DW_DWH.DWH_D_CURR_TIM_LU CURR ON SLS.DAY_KEY >= to_date(to_char(dateadd(week, -52, curr_day),'YYYY-MM-01'))
-GROUP BY ALL;
- 
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7bff-0000-21a103a615d6
-Number of rows: 1
-    
-----------------------------------------------------------------------------------------------------------------------------------
-                
-
-----------------------------------------------------------------------------------------------------------------------------------
-
-Attempt for DDL queries
- CREATE OR REPLACE 
- TABLE DW_TMP.TMP_F_INV_OVERSTK_EOH_MEAS_FACT_ILD_B (
-	MEAS_DT DATE,
-	CHN_KEY NUMBER,
-	CHNL_ID VARCHAR,
-	COMPANY_KEY NUMBER,
-	DIV_KEY NUMBER,
-	ITM_KEY NUMBER,
-	LOC_KEY NUMBER,
-	FROM_LOC_KEY NUMBER,
-	RSN_KEY NUMBER,
-	MIN_KEY NUMBER,
-	SUP_KEY NUMBER,
-	ITMLOC_STTS_CDE VARCHAR,
-	RTL_TYP_CDE VARCHAR,
-	LOC_TYP_CDE VARCHAR,
-	DSC_TYP_CDE VARCHAR,
-	RTRN_FLG NUMBER,
-	CUS_KEY NUMBER,
-	TXN_ID VARCHAR,
-	PRM_KEY NUMBER,
-	PO_NUM NUMBER,
-	CO_HDR_KEY NUMBER,
-	EXP_RCT_DT DATE,
-	ORD_PLACED_DT DATE,
-	ORD_BACKORDERED_DT DATE,
-	FACT_CDE NUMBER,
-	LCL_CNCY_CDE VARCHAR,
-	F_FACT_QTY NUMBER(18,4),
-	F_FACT_CST NUMBER(18,4),
-	F_FACT_RTL NUMBER(18,4),
-	F_FACT_COL1 NUMBER(18,4),
-	F_FACT_COL2 NUMBER(18,4),
-	F_FACT_COL3 NUMBER(18,4),
-	F_FACT_COL4 NUMBER(18,4),
-	F_FACT_COL5 NUMBER(18,4),
-	F_FACT_COL6 NUMBER(18,4),
-	F_FACT_COL7 NUMBER(18,4),
-	F_FACT_COL8 NUMBER(18,4),
-	ORIG_LOC_KEY NUMBER,
-	HT_CLR_MKDN_TYPE VARCHAR,
-	HT_PO_TYP_CDE VARCHAR,
-	HT_DMND_SRC_KEY NUMBER,
-	HT_FULFILL_TYP_KEY NUMBER,
-	HT_TXN_TYP_CDE VARCHAR,
-	SELLING_UOM VARCHAR,
-	MULTI_SELLING_UOM VARCHAR,
-	HT_ORG_CNTRY_CDE VARCHAR,
-	DMND_LOC_KEY NUMBER,
-	TNDR_KEY NUMBER,
-	SHIPPED_DT DATE,
-	ZIP_CDE VARCHAR,
-	CUS_LOYALTY_ID VARCHAR,
-	EMP_KEY NUMBER,
-	CUS_ORD_ID VARCHAR,
-	POS_TXN_ID VARCHAR,
-	PR_CDE VARCHAR
-);
- 
-on 2024-01-05 10:59:36.506730+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7bff-0000-21a103a615da
+on 2024-01-05 11:54:13.202719+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7c12-0000-21a103a62802
 Number of rows: 1
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -980,8 +488,8 @@ WHERE NOT EXISTS (SELECT *
                   WHERE tgt.FACT_CDE = SRC.FACT_CDE);
 
      
-on 2024-01-05 10:59:43.295485+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7c12-0000-21a103a625f2
+on 2024-01-05 11:54:15.656303+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7c12-0000-21a103a62806
 Number of rows: 0
     
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -1088,14 +596,14 @@ INSERT INTO DW_DWH.DWH_C_BATCH_SCRIPTS
         WHERE SRC.SCRIPT_NAME = TGT.SCRIPT_NAME
     );
  
-on 2024-01-05 10:59:43.295485+05:45: Started
-Snowflake Query ID : 01b1759a-0b05-7c12-0000-21a103a625f6
-Number of rows: 5
+on 2024-01-05 11:54:15.656303+05:45: Started
+Snowflake Query ID : 01b175d1-0b05-7c12-0000-21a103a6280a
+Number of rows: 0
     
 ----------------------------------------------------------------------------------------------------------------------------------
                 
 
 ----------------------------------------------------------------------------------------------------------------------------------
-This is status and result: Success and [(5,)]
+This is status and result: Success and [(0,)]
 ----------------------------------------------------------------------------------------------------------------------------------
                 

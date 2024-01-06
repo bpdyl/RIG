@@ -1,0 +1,181 @@
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for ddl of overstk history table 
+  CREATE OR REPLACE TABLE DW_DWH.DWH_F_INV_OVERSTK_ILD_B_HIST CLONE DW_DWH.DWH_F_INV_OVERSTK_ILD_B;  
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175db-0b05-7bff-0000-21a103a61796
+Number of rows: 1
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for truncate query TRUNCATE TABLE DW_DWH.DWH_F_INV_OVERSTK_ILD_B_HIST; for fresh load 
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175db-0b05-7bff-0000-21a103a6179a
+Number of rows: 1
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for Overstock dwh history load: 
+ 
+        INSERT INTO DW_DWH.DWH_F_INV_OVERSTK_ILD_B_HIST(
+                            DAY_KEY
+                            ,LOC_ID
+                            ,LOC_KEY
+                            ,ITM_ID
+                            ,ITM_KEY
+                            ,LCL_CNCY_CDE
+                            ,COUNT_OVERSTOCK
+                            ,OVERSTOCK_DAY_THRESHOLD
+                            ,NUM_DAYS_OF_SUPPLY
+                            ,AVG_L4W_SLS_RTL
+                            ,AVG_L4W_SLS_QTY
+                            ,AVG_L4W_SLS_CST
+                            ,OVERSTOCK_INV_RTL
+                            ,OVERSTOCK_INV_QTY
+                            ,OVERSTOCK_INV_CST
+                            ,DAYS_SINCE_SALE
+                            ,RCD_INS_TS
+                            ,RCD_UPD_TS
+                            )
+(
+
+SELECT  DAY_KEY
+       ,LOC_ID
+       ,LOC_KEY
+       ,ITM_ID
+       ,ITM_KEY
+       ,LCL_CNCY_CDE
+       ,COUNT_OVERSTOCK
+       ,OVERSTOCK_DAY_THRESHOLD
+       ,NUM_DAYS_OF_SUPPLY
+       ,L4W_SLS_RTL
+       ,L4W_SLS_QTY
+       ,L4W_SLS_CST
+       ,OVERSTOCK_INV_RTL
+       ,OVERSTOCK_INV_QTY
+       ,OVERSTOCK_INV_CST
+       ,DAYS_SINCE_SALE
+       ,CURRENT_TIMESTAMP
+       ,CURRENT_TIMESTAMP
+FROM
+(
+	SELECT  AVG_SLS.DAY_KEY                                                                                         AS DAY_KEY
+	       ,LOC.LOC_ID                                                                                              AS LOC_ID
+	       ,INV.LOC_KEY                                                                                             AS LOC_KEY
+	       ,ITM.ITM_ID                                                                                              AS ITM_ID
+	       ,INV.ITM_KEY                                                                                             AS ITM_KEY
+	       ,INV.LCL_CNCY_CDE                                                                                        AS LCL_CNCY_CDE
+	       ,42                                                                                                      AS OVERSTOCK_DAY_THRESHOLD
+	       ,SUM(AVG_L4W_SLS_RTL_LCL)                                                                                AS L4W_SLS_RTL
+	       ,SUM(AVG_L4W_SLS_QTY)                                                                                    AS L4W_SLS_QTY
+	       ,SUM(AVG_L4W_SLS_CST_LCL)                                                                                AS L4W_SLS_CST
+	       ,SUM(F_OH_QTY)                                                                                           AS INV_QTY
+	       ,SUM(F_OH_RTL_LCL)                                                                                       AS INV_RTL
+	       ,SUM(F_OH_CST_LCL)                                                                                       AS INV_CST
+	       ,INV_QTY / NULLIF(L4W_SLS_QTY,0)                                                                         AS NUM_DAYS_OF_SUPPLY
+	       ,1                                                                                                       AS COUNT_OVERSTOCK
+	       ,CASE WHEN NUM_DAYS_OF_SUPPLY IS NULL THEN INV_QTY  ELSE (INV_QTY - L4W_SLS_QTY * 42) END                AS OVERSTOCK_INV_QTY
+	       ,CASE WHEN NUM_DAYS_OF_SUPPLY IS NULL THEN INV_RTL  ELSE OVERSTOCK_INV_QTY * SUM(F_UNIT_RTL_LCL) END     AS OVERSTOCK_INV_RTL
+	       ,CASE WHEN NUM_DAYS_OF_SUPPLY IS NULL THEN INV_CST  ELSE OVERSTOCK_INV_QTY * SUM(F_UNIT_WAC_CST_LCL) END AS OVERSTOCK_INV_CST
+	       ,DATEDIFF(DAY,(
+                  SELECT  MAX(TXN_DT_KEY)
+                  FROM DW_DWH.DWH_F_SLS_TXN_LN_ITM_B SLS
+                  WHERE SLS.ITM_KEY = AVG_SLS.ITM_KEY
+                  AND SLS.LOC_KEY = AVG_SLS.LOC_KEY
+                  AND TXN_DT_KEY <= AVG_SLS.DAY_KEY), AVG_SLS.DAY_KEY)                                             AS DAYS_SINCE_SALE
+	FROM DW_DWH.DWH_F_INV_ILD_B INV
+	LEFT OUTER JOIN DW_DWH.DWH_F_AVG_SLS_L4W_ILD_B_HIST AVG_SLS
+	ON INV.ITM_KEY = AVG_SLS.ITM_KEY AND INV.LOC_KEY = AVG_SLS.LOC_KEY AND (AVG_SLS.DAY_KEY BETWEEN INV.DAY_KEY AND INV.END_DAY_KEY)
+    INNER JOIN DW_DWH.DWH_D_TIM_DAY_LU TIM ON TIM.DAY_KEY = AVG_SLS.DAY_KEY
+	INNER JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM
+	ON INV.ITM_KEY = ITM.ITM_KEY
+	INNER JOIN DW_DWH.DWH_D_ORG_LOC_LU LOC
+	ON INV.LOC_KEY = LOC.LOC_KEY
+	WHERE LOC.CHNL_DESC <> 'eCommerce' AND TIM.DAY_KEY>='2020-02-02'
+	GROUP BY  ALL
+	HAVING SUM(F_OH_QTY) > 0 AND (NUM_DAYS_OF_SUPPLY IS NULL OR NUM_DAYS_OF_SUPPLY > OVERSTOCK_DAY_THRESHOLD)
+)
+);
+           
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b175db-0b05-7bff-0000-21a103a6179e
+Number of rows: 221051975
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+Overstock History dwh load Successful. []
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for datamart delete query 
+ DELETE FROM DM_MERCH.DM_F_MEAS_FACT_ILD_B WHERE FACT_CDE = 1600;-- Overstock  
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b17609-0b05-7bf8-0000-21a103a6372e
+Number of rows: 9500441
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Attempt for datamart insert query 
+ 
+                INSERT INTO DM_MERCH.DM_F_MEAS_FACT_ILD_B 
+                (
+                MEAS_DT
+                ,ITM_KEY
+                ,LOC_KEY
+                ,DIV_KEY
+                ,CHN_KEY
+                ,CHNL_ID
+                ,FACT_CDE
+                ,LCL_CNCY_CDE
+                ,F_FACT_COL1
+                ,F_FACT_COL2
+                ,F_FACT_COL3
+                ,F_FACT_COL4
+                ,F_FACT_COL5
+                ,F_FACT_COL6
+                )
+                SELECT SRC.DAY_KEY               AS MEAS_DT   
+                ,SRC.ITM_KEY                     AS ITM_KEY   
+                ,SRC.LOC_KEY                     AS LOC_KEY   
+                ,ITM.DIV_KEY                     AS DIV_KEY   
+                ,LOC.CHN_KEY                     AS CHN_KEY   
+                ,LOC.CHNL_ID                     AS CHNL_ID   
+                ,1600                            AS FACT_CDE   
+                ,SRC.LCL_CNCY_CDE                AS LCL_CNCY_CDE   
+                ,SRC.NUM_DAYS_OF_SUPPLY          AS F_FACT_COL1   
+                ,SRC.COUNT_OVERSTOCK             AS F_FACT_COL2   
+                ,SRC.AVG_L4W_SLS_QTY             AS F_FACT_COL3   
+                ,SRC.AVG_L4W_SLS_RTL             AS F_FACT_COL4   	
+                ,SRC.AVG_L4W_SLS_CST             AS F_FACT_COL5    
+                ,SRC.DAYS_SINCE_SALE             AS F_FACT_COL6   
+            FROM DW_DWH.DWH_F_INV_OVERSTK_ILD_B SRC
+            INNER JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM ON ITM.ITM_KEY = SRC.ITM_KEY
+            INNER JOIN DW_DWH.DWH_D_ORG_LOC_LU LOC ON LOC.LOC_KEY = SRC.LOC_KEY
+            --WHERE SRC.DAY_KEY <> '2023-12-13'
+            ;
+         
+on 2024-01-05 11:54:12.474791+05:45: Started
+Snowflake Query ID : 01b17609-0b05-7c12-0000-21a103a6287e
+Number of rows: 0
+    
+----------------------------------------------------------------------------------------------------------------------------------
+                
+
+----------------------------------------------------------------------------------------------------------------------------------
+Overstock History datamart load Successful. Deleted result: [] and ins result: [(0,)]
+----------------------------------------------------------------------------------------------------------------------------------
+                

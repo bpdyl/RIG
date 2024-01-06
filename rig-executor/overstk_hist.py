@@ -159,9 +159,133 @@ def overstk_hist_dm(cursor,attempt_date):
     else:
         overstk_logger.error(f'{delete_query_status} and {dm_ins_query_status}')
 
+def overstk_eoh_hist_dm(cursor, attempt_date):
+  overstk_eoh_handler = logging.FileHandler(f'{log_file_path}/overstock_eoh_hist.log', encoding='utf-8')
+  formatter = CustomFormatter()
+  overstk_eoh_handler.setFormatter(formatter)
+  overstk_eoh_logger = logging.getLogger('overstock_eoh')
+  overstk_eoh_logger.setLevel(logging.DEBUG)
+  overstk_eoh_logger.addHandler(overstk_eoh_handler)
+  truncate_query = "truncate table DW_TMP.TMP_F_INV_OVERSTK_EOH_MEAS_FACT_ILD_B;"
+  insert_previous_query = """
+      -- Insert Previous
+      insert into DW_TMP.TMP_F_INV_OVERSTK_EOH_MEAS_FACT_ILD_B
+      (
+          MEAS_DT, DIV_KEY, CHN_KEY, CHNL_ID, ITM_KEY, LOC_KEY, FACT_CDE, LCL_CNCY_CDE,
+          F_FACT_COL1, F_FACT_COL2, F_FACT_COL3
+      )
+      SELECT
+          SRC.DAY_KEY + 1                         AS MEAS_DT -- Add one day for previous
+          ,ITM.DIV_KEY                            AS DIV_KEY
+          ,LOC.CHN_KEY                            AS CHN_KEY
+          ,LOC.CHNL_ID                            AS CHNL_ID
+          ,SRC.ITM_KEY                            AS ITM_KEY
+          ,SRC.LOC_KEY                            AS LOC_KEY
+          ,1650                                   AS FACT_CDE
+          ,'USD'                                  AS LCL_CNCY_CDE
+          /* Multiply facts times -1 for previous        */
+          ,-SRC.OVERSTOCK_INV_QTY                 AS F_FACT_COL1
+          ,-SRC.OVERSTOCK_INV_CST                 AS F_FACT_COL2
+          ,-SRC.OVERSTOCK_INV_RTL                 AS F_FACT_COL3
+      FROM
+          DW_DWH.DWH_F_INV_OVERSTK_ILD_B SRC
+          INNER JOIN DW_DWH.DWH_D_ORG_LOC_LU LOC ON LOC.LOC_KEY = SRC.LOC_KEY
+          INNER JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM ON SRC.ITM_KEY = ITM.ITM_KEY
+      WHERE
+          -- Exclude the last day as a previous
+          SRC.DAY_KEY < (select max(DAY_KEY) from DW_DWH.DWH_F_INV_OVERSTK_ILD_B)
+          -- Exclude the last day of the quarter as a previous so that records start fresh at BOQ
+          and SRC.DAY_KEY not in (select MTH_END_DT from DW_DWH.DWH_D_TIM_MTH_LU)
+      ORDER BY
+          SRC.DAY_KEY
+          ,SRC.LOC_KEY;
+  """
+  insert_current_query = """
+      -- Insert current
+      insert into DW_TMP.TMP_F_INV_OVERSTK_EOH_MEAS_FACT_ILD_B
+      (
+          MEAS_DT, DIV_KEY, CHN_KEY, CHNL_ID, ITM_KEY, LOC_KEY, FACT_CDE, LCL_CNCY_CDE,
+          F_FACT_COL1, F_FACT_COL2, F_FACT_COL3
+      )
+      SELECT
+          DAY_KEY                 AS MEAS_DT
+          ,ITM.DIV_KEY             AS DIV_KEY
+          ,LOC.CHN_KEY             AS CHN_KEY
+          ,LOC.CHNL_ID             AS CHNL_ID
+          ,ITM.ITM_KEY             AS ITM_KEY
+          ,LOC.LOC_KEY             AS LOC_KEY
+          ,1650                    AS FACT_CDE
+          ,LCL_CNCY_CDE           AS LCL_CNCY_CDE
+          ,OVERSTOCK_INV_QTY      AS F_FACT_COL1
+          ,OVERSTOCK_INV_CST      AS F_FACT_COL2
+          ,OVERSTOCK_INV_RTL      AS F_FACT_COL3
+      FROM
+          DW_DWH.DWH_F_INV_OVERSTK_ILD_B SRC
+          INNER JOIN DW_DWH.DWH_D_ORG_LOC_LU LOC ON LOC.LOC_KEY = SRC.LOC_KEY
+          INNER JOIN DW_DWH.DWH_D_PRD_ITM_LU ITM ON SRC.ITM_KEY = ITM.ITM_KEY
+      WHERE
+          (SRC.OVERSTOCK_INV_QTY <> 0
+          OR SRC.OVERSTOCK_INV_CST <> 0
+          OR SRC.OVERSTOCK_INV_RTL <> 0)
+      ORDER BY
+          SRC.DAY_KEY
+          ,SRC.LOC_KEY;
+  """
 
-def overstk_eoh_hist_dm(cursor):
-    pass
+  delete_query = '''delete from DM_MERCH.DM_F_MEAS_FACT_ILD_B
+      where FACT_CDE = 1650;--Overstock EOH'''
+
+  dm_insert_query = """
+      INSERT INTO DM_MERCH.DM_F_MEAS_FACT_ILD_B
+      (
+          MEAS_DT, DIV_KEY, CHN_KEY, CHNL_ID, ITM_KEY, LOC_KEY, FACT_CDE, LCL_CNCY_CDE,
+          F_FACT_COL1, F_FACT_COL2, F_FACT_COL3
+      )
+      SELECT
+          SRC.MEAS_DT                 AS MEAS_DT
+          ,DIV_KEY                    AS DIV_KEY
+          ,CHN_KEY                    AS CHN_KEY
+          ,CHNL_ID                    AS CHNL_ID
+          ,ITM_KEY                    AS ITM_KEY
+          ,LOC_KEY                    AS LOC_KEY
+          ,FACT_CDE                   AS FACT_CDE
+          ,LCL_CNCY_CDE               AS LCL_CNCY_CDE
+          ,SUM(F_FACT_COL1)           AS F_FACT_COL1
+          ,SUM(F_FACT_COL2)           AS F_FACT_COL2
+          ,SUM(F_FACT_COL3)           AS F_FACT_COL3
+      FROM
+          DW_TMP.TMP_F_INV_OVERSTK_EOH_MEAS_FACT_ILD_B SRC
+      GROUP BY
+          SRC.MEAS_DT
+          ,DIV_KEY
+          ,CHN_KEY
+          ,CHNL_ID
+          ,ITM_KEY
+          ,LOC_KEY
+          ,FACT_CDE
+          ,LCL_CNCY_CDE
+      HAVING SUM(F_FACT_COL1) <> 0 OR SUM(F_FACT_COL2) <> 0 OR SUM(F_FACT_COL3) <> 0;
+  """
+  truncate_log_prefix = f"Attempt to truncate table: {truncate_query}"
+  insert_previous_log_prefix = f"Attempt to insert previous data: {insert_previous_query}"
+  insert_current_log_prefix = f"Attempt to insert current data: {insert_current_query}"
+  delete_dm_log_prefix = f"Attempt to delete and insert data: {delete_query}"
+  insert_dm_log_prefix = f"Attempt to delete and insert data: {dm_insert_query}"
+
+
+  truncate_status, truncate_result = execute_query(cursor, truncate_query, truncate_log_prefix, attempt_date, overstk_eoh_logger)
+  insert_previous_status, insert_previous_result = execute_query(cursor, insert_previous_query, insert_previous_log_prefix, attempt_date, overstk_eoh_logger)
+  insert_current_status, insert_current_result = execute_query(cursor, insert_current_query, insert_current_log_prefix, attempt_date, overstk_eoh_logger)
+  delete_dm_status, delete_dm_result = execute_query(cursor, delete_query, delete_dm_log_prefix, attempt_date, overstk_eoh_logger)
+  insert_dm_status, insert_dm_result = execute_query(cursor, dm_insert_query,insert_dm_log_prefix, attempt_date, overstk_eoh_logger)
+
+
+  if all(status == 'Success' for status in [truncate_status, insert_previous_status, insert_current_status, delete_dm_status,insert_dm_status]):
+      overstk_eoh_logger.info(f"Overstock EOH History datamart load Successful. Results: {truncate_result}, {insert_previous_result}, {insert_current_result}, {delete_dm_result}, {insert_dm_result}")
+  else:
+      overstk_eoh_logger.error(f"Error in one or more queries: {truncate_status}, {insert_previous_status}, {insert_current_status}, {delete_dm_status}, {insert_dm_status}")
+
+    
 
 def overstk_eoh_hist_dm_old(cursor,test_time):
     # Set up logging for overstock

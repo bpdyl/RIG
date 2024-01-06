@@ -1,7 +1,7 @@
 import sys
 import logging
 
-log_file_path = 'D:/Robling/MyPlayground/RIG/rig-executor/Logs'
+log_file_path = 'rig-executor/Logs'
 min_history_load_dt = '2020-02-02'
 max_history_load_dt = '2020-08-26'
 
